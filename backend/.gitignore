@@ -1,0 +1,22 @@
+# backend/.gitignore
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+local_settings.py
+media/
+static_collected/ # If you collect static files locally
+.env # IMPORTANT!
+venv/
+.DS_Store
+*.swp
+.env
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE specific
+.vscode/
+.idea/

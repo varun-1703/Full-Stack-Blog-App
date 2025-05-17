@@ -1,0 +1,12 @@
+// frontend/blog_ui/src/App.jsx
+import React from 'react';
+import './App.css';
+
+function App() {
+  return (
+    <div>
+      <h1>Blog Application Frontend (Vite + React)</h1>
+    </div>
+  );
+}
+export default App;
