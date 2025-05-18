@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from .models import BlogPost
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -94,3 +95,42 @@ class LoginSerializer(serializers.Serializer):
             'token': token.key,
             'user': UserSerializer(user_obj, context=self.context).data
         }
+        
+class BlogPostSerializer(serializers.ModelSerializer):
+    """
+    Serializer for BlogPost objects.
+    """
+    # To display author's username instead of just ID in responses. Read-only.
+    author_username = serializers.CharField(source='author.username', read_only=True)
+    # To make author field writeable by ID but not required in input if set automatically
+    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+
+
+    class Meta:
+        model = BlogPost
+        fields = ('id', 'title', 'content', 'author', 'author_username', 'created_at', 'updated_at')
+        read_only_fields = ('author_username', 'created_at', 'updated_at') # Fields that shouldn't be set via input
+
+    def create(self, validated_data):
+        # Automatically set the author to the currently authenticated user during creation
+        # The 'author' field might not be in validated_data if not provided explicitly,
+        # or it might be if we allow admins to set it.
+        # For user-created posts, we ensure the author is the request.user.
+        if 'author' not in validated_data and self.context['request'].user.is_authenticated:
+            validated_data['author'] = self.context['request'].user
+        elif 'author' in validated_data and self.context['request'].user.is_staff:
+            # Allow staff/admin to specify author, otherwise enforce request.user
+            pass # Author is already set from input
+        elif self.context['request'].user.is_authenticated:
+             # If non-staff user tries to set author, or no author is provided and user is anon (though this case is less likely due to view permissions)
+            validated_data['author'] = self.context['request'].user
+
+
+        # Ensure 'author' is set if not provided and user is authenticated
+        if 'author' not in validated_data and self.context['request'].user.is_authenticated:
+            validated_data['author'] = self.context['request'].user
+        elif 'author' not in validated_data: # Should be caught by permissions if user is anonymous
+             raise serializers.ValidationError("Author is required.")
+
+
+        return super().create(validated_data)

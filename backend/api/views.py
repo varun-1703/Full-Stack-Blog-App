@@ -1,15 +1,14 @@
 from django.shortcuts import render
-# backend/api/views.py
-
 from django.contrib.auth.models import User
 from django.contrib.auth import logout as django_logout
-
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, BlogPostSerializer 
+from rest_framework import viewsets 
+from .models import BlogPost 
+from .permissions import IsAuthorOrReadOnly 
 
 class RegisterView(generics.CreateAPIView):
     """
@@ -82,3 +81,49 @@ class UserDetailView(generics.RetrieveAPIView):
     def get_object(self):
         # Returns the current authenticated user making the request
         return self.request.user
+    
+class BlogPostViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows blog posts to be viewed or edited.
+    - List and Detail views are public (read-only for unauthenticated).
+    - Create requires authentication.
+    - Update and Delete require authentication and user to be the author.
+    """
+    queryset = BlogPost.objects.all() # Defines the default set of objects for the ViewSet
+    serializer_class = BlogPostSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly] # Basic: auth for write, anyone for read
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        - For 'create', require IsAuthenticated.
+        - For 'update', 'partial_update', 'destroy', require IsAuthorOrReadOnly.
+        - For 'list', 'retrieve', allow IsAuthenticatedOrReadOnly (or AllowAny for fully public reads).
+        """
+        if self.action == 'create':
+            permission_classes = [permissions.IsAuthenticated]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            permission_classes = [IsAuthorOrReadOnly]
+        else: # 'list', 'retrieve'
+            permission_classes = [permissions.AllowAny] # Make list and detail viewable by everyone
+            # Or use [permissions.IsAuthenticatedOrReadOnly] if you want unauth users to only read,
+            # and auth users to potentially do more based on object permissions.
+            # For this assignment, "viewable by everyone" suggests AllowAny for list/retrieve.
+        return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        """
+        Overrides the default create behavior to automatically set the author
+        to the currently logged-in user.
+        """
+        if self.request.user.is_authenticated:
+            serializer.save(author=self.request.user)
+        else:
+            # This case should ideally be prevented by get_permissions,
+            # but as a safeguard:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("You must be logged in to create a blog post.")
+
+    # Optional: If you want to filter posts by author for a "my posts" endpoint,
+    # you could add a custom action or filter backend.
+    # For now, the list view shows all posts.
