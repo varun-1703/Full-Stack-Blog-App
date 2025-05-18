@@ -1,12 +1,66 @@
-// frontend/blog_ui/src/App.jsx
-import React from 'react';
-import './App.css';
-
-function App() {
-  return (
-    <div>
-      <h1>Blog Application Frontend (Vite + React)</h1>
-    </div>
-  );
+/* frontend/blog_ui/src/App.css */
+.container {
+  max-width: 1100px;
+  margin: 20px auto; /* Add some margin below navbar */
+  padding: 0 20px;
 }
-export default App;
+
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button, input[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Basic form styling (can be moved to a form component later) */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}

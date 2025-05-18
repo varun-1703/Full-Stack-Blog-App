@@ -1,0 +1,121 @@
+/* frontend/blog_ui/src/components/Navbar.css */
+.navbar {
+  background: linear-gradient(90deg, rgb(28, 27, 27) 0%, rgb(26, 23, 23) 100%);
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+  z-index: 1;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.navbar-logo {
+  color: #fff;
+  justify-self: start;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+}
+
+.nav-item {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  height: 100%;
+  transition: all 0.2s ease-out;
+}
+
+.nav-links:hover {
+  color: #1888ff;
+  border-bottom: 4px solid #1888ff;
+}
+
+.nav-links-button {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem; /* Match nav-links */
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-out;
+}
+
+.nav-links-button:hover {
+  color: #1888ff;
+}
+
+/* Basic responsiveness for mobile */
+@media screen and (max-width: 960px) {
+  .navbar-container {
+    padding: 0 10px;
+  }
+  .nav-menu {
+    /* Basic stacking for mobile, more advanced would use a burger menu */
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 80px;
+    left: -100%; /* Hidden by default */
+    opacity: 1;
+    transition: all 0.5s ease;
+    background: #242222;
+  }
+
+  .nav-menu.active { /* This class would be toggled by a burger icon */
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+
+  .nav-links {
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    display: table;
+  }
+
+  .nav-links:hover {
+    color: #1888ff;
+    border-bottom: none; /* Remove border for stacked items */
+    background-color: #fff;
+    color: #242424;
+    border-radius: 0;
+  }
+  /* For simplicity, we're not implementing the burger menu toggle JS here,
+     but the structure is ready for it. For now, items might look squished on mobile. */
+}
