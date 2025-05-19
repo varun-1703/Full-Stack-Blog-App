@@ -1,15 +1,25 @@
 import os
 from pathlib import Path # Path is already imported by default in newer Django
 from dotenv import load_dotenv
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent # Ensure BASE_DIR is defined
 load_dotenv(os.path.join(BASE_DIR, '.env')) # Loads variables from .env in the backend root
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True' # Default to False if not set
+DEBUG = os.environ.get('DEBUG', 'False') == 'True' 
 
 ALLOWED_HOSTS = []
 
+# For Render deployment
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# For local development, if needed explicitly when DEBUG=False
+if not DEBUG: # Or if 'RENDER' not in os.environ
+    ALLOWED_HOSTS.append('localhost')
+    ALLOWED_HOSTS.append('127.0.0.1')
 
 # Application definition
 
@@ -29,6 +39,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.common.CommonMiddleware',
@@ -43,6 +54,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     # Add your Vercel deployed frontend URL here later
 ]
+if 'RENDER_EXTERNAL_HOSTNAME' in os.environ:
+    CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("RENDER_EXTERNAL_HOSTNAME")}']
+
+
 CORS_ALLOW_CREDENTIALS = True # If you plan to use session/token auth with cookies
 
 
@@ -72,15 +87,25 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    }
+    'default': dj_database_url.config(
+        # Feel free to specify ssl_require=True if Render requires it for your plan.
+        # For free tiers, it might not be enforced or might be handled by the connection string.
+        conn_max_age=600, # Optional: connection pooling
+        # ssl_require=(os.environ.get('RENDER') == 'True') # Enforce SSL on Render
+    )
 }
+# Fallback to local .env settings if DATABASE_URL is not set (for local dev)
+if not DATABASES['default']: # if dj_database_url.config() returned an empty dict
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
+    }
 
 
 # Password validation
@@ -132,3 +157,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static') # For collectstatic
+# Simplified WhiteNoise storage option for production without needing `compression` extras
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_URL = '/media/' # If you were handling media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
