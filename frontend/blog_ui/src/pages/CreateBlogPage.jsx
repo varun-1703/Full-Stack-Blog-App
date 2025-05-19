@@ -9,11 +9,13 @@ const CreateBlogPage = () => {
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
     setIsLoading(true);
 
     if (!title.trim() || !content.trim()) {
@@ -26,20 +28,11 @@ const CreateBlogPage = () => {
       const newPostData = { title, content };
       const response = await createBlogPost(newPostData);
       console.log('Blog post created:', response.data);
-      // Navigate to the newly created blog post's detail page
-      navigate(`/blogs/${response.data.id}`);
+      setSuccessMessage('Blog post created successfully!');
+      setTimeout(() => navigate(`/blogs/${response.data.id}`), 2000);
     } catch (err) {
       console.error('Failed to create blog post:', err.response ? err.response.data : err.message);
-      if (err.response && err.response.data) {
-        // Handle specific backend errors if provided
-        let errorMsg = 'Failed to create post. ';
-        for (const key in err.response.data) {
-          errorMsg += `${key}: ${err.response.data[key].join ? err.response.data[key].join(', ') : err.response.data[key]} `;
-        }
-        setError(errorMsg.trim());
-      } else {
-        setError('An unexpected error occurred. Please try again.');
-      }
+      setError(err.customMessage || 'Failed to create blog post.');
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +42,7 @@ const CreateBlogPage = () => {
     <div className="create-blog-page">
       <h2>Create New Blog Post</h2>
       {error && <p className="error-message">{error}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
       <form onSubmit={handleSubmit} className="blog-form">
         <div className="form-group">
           <label htmlFor="title">Title:</label>

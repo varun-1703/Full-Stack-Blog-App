@@ -14,6 +14,7 @@ const EditBlogPage = () => {
   const [pageState, setPageState] = useState('loading'); // 'loading', 'loaded', 'error', 'unauthorized'
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
 
   // Get currentUser ONCE on component mount or when it fundamentally changes (e.g. login/logout causing Navbar reload)
   // This local `currentUser` won't react to localStorage changes *during* this component's lifecycle
@@ -54,11 +55,8 @@ const EditBlogPage = () => {
       setPageState('loaded'); // Transition to 'loaded' only after all checks and data setting
     } catch (err) {
       console.error('Failed to fetch post for editing:', err);
-      if (err.response && err.response.status === 404) {
-        setErrorMessage('Blog post not found.');
-      } else {
-        setErrorMessage('Failed to load blog post data. Please try again.');
-      }
+      // Use the custom message from the interceptor if available
+      setErrorMessage(err.customMessage || 'Failed to load blog post data. Please try again.');
       setPageState('error');
     }
   }, [id, currentUser]); // Removed pageState from dependencies
@@ -80,6 +78,7 @@ const EditBlogPage = () => {
     // ... (handleSubmit remains largely the same)
     e.preventDefault();
     setErrorMessage('');
+    setSuccessMessage(''); // Clear previous messages
     setIsSubmitting(true);
 
     if (!formData.title.trim() || !formData.content.trim()) {
@@ -90,19 +89,18 @@ const EditBlogPage = () => {
 
     try {
       const response = await updateBlogPost(id, formData);
-      navigate(`/blogs/${response.data.id}`);
+      console.log('Blog post updated:', response.data);
+      setSuccessMessage('Blog post updated successfully!'); // Set success message
+      // Optionally, navigate after a delay or keep the user on the page
+      // navigate(`/blogs/${response.data.id}`);
     } catch (err) {
-      let errorMsg = 'Failed to update post. ';
-      if (err.response && err.response.data) {
-        for (const key in err.response.data) {
-          errorMsg += `${key}: ${err.response.data[key].join ? err.response.data[key].join(', ') : err.response.data[key]} `;
-        }
-      } else {
-        errorMsg = 'An unexpected error occurred. Please try again.';
-      }
-      setErrorMessage(errorMsg.trim());
+      console.error('Failed to update post:', err);
+      // Use the custom message from the interceptor if available
+      setErrorMessage(err.customMessage || 'Failed to update post.');
     } finally {
       setIsSubmitting(false);
+      // Clear success message after a few seconds
+      setTimeout(() => setSuccessMessage(''), 5000); // Clear after 5 seconds
     }
   };
 
@@ -125,7 +123,8 @@ const EditBlogPage = () => {
   return (
     <div className="edit-blog-page">
       <h2>Edit Blog Post</h2>
-      {errorMessage && isSubmitting && <p className="error-message">{errorMessage}</p>} {/* Only show submission errors here */}
+      {errorMessage && !isSubmitting && <p className="error-message">{errorMessage}</p>} {/* Show error if not submitting */}
+      {successMessage && <p className="success-message">{successMessage}</p>} {/* Display success message */}
       <form onSubmit={handleSubmit} className="blog-form">
         <div className="form-group">
           <label htmlFor="title">Title:</label>

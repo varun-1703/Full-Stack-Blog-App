@@ -1,0 +1,9 @@
+Django==5.2.1
+djangorestframework==3.16.0
+psycopg2-binary==2.9.10 # Or psycopg2 if you compile it yourself
+gunicorn==23.0.0
+python-dotenv==1.1.0
+django-cors-headers==4.7.0
+asgiref==3.8.1 # Dependency, good to include
+sqlparse==0.5.3 # Dependency, good to include
+tzdata==2025.2 # Dependency, good to include 

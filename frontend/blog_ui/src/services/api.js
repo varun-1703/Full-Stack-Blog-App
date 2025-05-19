@@ -29,15 +29,70 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Handle unauthorized access, e.g., redirect to login
-      // localStorage.removeItem('authToken');
-      // localStorage.removeItem('authUser');
-      // window.location.href = '/login'; // Or use React Router navigation
-      console.error("Unauthorized access - 401");
-      // Potentially clear local storage and redirect
+    // Centralized Error Handling
+    let errorMessage = 'An unexpected error occurred.';
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      const { status, data } = error.response;
+
+      if (status === 400) {
+        // Handle Bad Request / Validation Errors
+        if (typeof data === 'object') {
+          errorMessage = 'Validation Error: ';
+          for (const key in data) {
+            if (Array.isArray(data[key])) {
+              errorMessage += `${key}: ${data[key].join(', ')} | `;
+            } else {
+              errorMessage += `${key}: ${data[key]} | `;
+            }
+          }
+          errorMessage = errorMessage.slice(0, -3); // Remove trailing ' | '
+        } else if (data) {
+             errorMessage = `Bad Request: ${data}`;
+        } else {
+             errorMessage = 'Bad Request.';
+        }
+      } else if (status === 401) {
+        // Handle Unauthorized
+        errorMessage = data.detail || 'Unauthorized. Please log in again.';
+        // Redirect to login page (assuming react-router-dom) - you might need access to history/navigate here
+        // For now, just log and consider a global state/context for auth
+        console.error("Unauthorized access - 401");
+         // Example: Clear local storage and redirect (if still using localStorage)
+        // localStorage.removeItem('authToken');
+        // localStorage.removeItem('authUser');
+        // window.location.href = '/login'; // Redirect
+
+      } else if (status === 403) {
+        // Handle Forbidden
+        errorMessage = data.detail || 'You do not have permission to perform this action.';
+      } else if (status === 404) {
+        // Handle Not Found
+         errorMessage = data.detail || 'Resource not found.';
+      } else if (status >= 500) {
+        // Handle Server Errors
+        errorMessage = data.detail || 'Internal Server Error. Please try again later.';
+      }
+       // Propagate the error response data if needed by components
+       // error.response.data = data;
+       // error.response.status = status;
+
+    } else if (error.request) {
+      // The request was made but no response was received
+      errorMessage = 'Network Error: Could not connect to the server. Please check your internet connection or try again later.';
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      errorMessage = error.message;
     }
-    return Promise.reject(error);
+
+     // You can attach the processed error message to the error object
+     error.customMessage = errorMessage;
+
+    // You can also trigger a global error notification here if you have a context/state management
+    // console.error("API Error:", errorMessage);
+
+    return Promise.reject(error); // Propagate the error
   }
 );
 
