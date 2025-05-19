@@ -1,4 +1,30 @@
 /* frontend/blog_ui/src/App.css */
+:root {
+  --primary-color: #3498db; /* A different shade of blue */
+  --secondary-color: #2ecc71; /* Green for success/edit actions */
+  --danger-color: #e74c3c; /* Red for danger/delete actions */
+  --text-color: #333;
+  --secondary-text-color: #555;
+  --background-color: #f8f9fa; /* Light background */
+  --card-background: #fff;
+  --border-color: #ddd;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif; /* Use Roboto font */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color); /* Use variable */
+  color: var(--text-color); /* Use variable */
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .container {
   max-width: 1100px;
   margin: 20px auto; /* Add some margin below navbar */
@@ -6,11 +32,11 @@
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #333;
+  color: var(--text-color); /* Use variable */
 }
 
 a {
-  color: #007bff;
+  color: var(--primary-color); /* Use variable */
   text-decoration: none;
 }
 
@@ -19,17 +45,18 @@ a:hover {
 }
 
 button, input[type="submit"] {
-  background-color: #007bff;
+  background-color: var(--primary-color); /* Use variable */
   color: white;
   border: none;
   padding: 10px 15px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
+  transition: background-color 0.2s ease;
 }
 
-button:hover, input[type="submit"]:hover {
-  background-color: #0056b3;
+button:hover:not(:disabled), input[type="submit"]:hover:not(:disabled) {
+  background-color: #2980b9; /* Darker shade for hover */
 }
 
 /* Basic form styling (can be moved to a form component later) */
@@ -41,6 +68,7 @@ button:hover, input[type="submit"]:hover {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+  color: var(--secondary-text-color); /* Use variable */
 }
 
 .form-group input[type="text"],
@@ -49,9 +77,19 @@ button:hover, input[type="submit"]:hover {
 .form-group textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color); /* Use variable */
   border-radius: 4px;
   font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"],
+.form-group input[type="password"]:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-color); /* Use variable */
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.2); /* Example shadow with primary color */
+    outline: none;
 }
 
 .form-group textarea {
@@ -60,7 +98,7 @@ button:hover, input[type="submit"]:hover {
 }
 
 .error-message {
-    color: red;
+    color: var(--danger-color); /* Use variable */
     font-size: 0.9em;
     margin-top: 5px;
 }
