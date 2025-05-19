@@ -1,0 +1,94 @@
+/* frontend/blog_ui/src/pages/BlogDetailPage.css */
+.blog-detail-page {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.blog-post-full {
+  /* Styles for the article container if needed */
+}
+
+.blog-post-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+}
+
+.blog-post-title {
+  font-size: 2.8rem;
+  color: #222;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.blog-post-meta {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 0;
+}
+
+.blog-post-meta .author-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.blog-post-content {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #444;
+  word-wrap: break-word; /* Ensure long words don't break layout */
+}
+
+/* Styles for actions (Edit/Delete buttons) */
+.blog-post-actions {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 15px; /* Space between buttons */
+}
+
+.action-button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: none; /* Reset button border for consistency */
+}
+
+.edit-button {
+  background-color: #28a745; /* Green */
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #218838;
+}
+
+.delete-button {
+  background-color: #dc3545; /* Red */
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+/* Loading and error messages - can reuse global styles or define specific ones */
+.loading-message,
+.error-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 20px;
+}
+
+.error-message {
+  color: #d9534f;
+}
