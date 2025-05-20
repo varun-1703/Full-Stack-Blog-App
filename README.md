@@ -2,7 +2,7 @@
 
 ![MyBlogApp Showcase](https://via.placeholder.com/800x300.png?text=Blogify+Application+Showcase)
 
-**Live Demo URL:**  (Coming Soon!)
+**Live Demo URL:**  https://blog-app-frontend-482h.onrender.com
 **Loom Walkthrough:** (Coming Soon!)
 
 ---
