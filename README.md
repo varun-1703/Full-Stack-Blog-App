@@ -1,4 +1,4 @@
-# 🚀 Full-Stack Blogify - Create, Share, Inspire! 📝
+# 🚀 Full-Stack MyBlogApp - Create, Share, Inspire! 📝
 
 ![Blogify Showcase](https://via.placeholder.com/800x300.png?text=Blogify+Application+Showcase)
 
@@ -9,7 +9,7 @@
 
 ## ✨ About The Project
 
-**Blogify** is a dynamic full-stack web application that empowers users to create, manage, and share their thoughts and stories through blog posts. Built with modern technologies, it features a sleek user interface, robust user authentication, and a comprehensive API for content management.
+**MyBlogApp** is a dynamic full-stack web application that empowers users to create, manage, and share their thoughts and stories through blog posts. Built with modern technologies, it features a sleek user interface, robust user authentication, and a comprehensive API for content management.
 
 This project was developed as a full-stack assessment, showcasing skills in both frontend and backend development, API design, database management, and cloud deployment.
 
@@ -52,9 +52,9 @@ This project is built with a carefully selected stack of free-tier friendly and 
     *   **PostgreSQL:** A powerful, open-source object-relational database system.
 *   **Version Control:**
     *   **Git & GitHub:** For source code management and collaboration.
-*   **Deployment (Planned):**
-    *   **Frontend:** Vercel (or similar like Netlify)
-    *   **Backend & Database:** Render (or similar like Railway, PythonAnywhere)
+*   **Deployment:**
+    *   **Frontend:** Render
+    *   **Backend & Database:** Render 
 
 ---
 
