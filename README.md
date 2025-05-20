@@ -1,6 +1,6 @@
 # 🚀 Full-Stack MyBlogApp - Create, Share, Inspire! 📝
 
-![Blogify Showcase](https://via.placeholder.com/800x300.png?text=Blogify+Application+Showcase)
+![MyBlogApp Showcase](https://via.placeholder.com/800x300.png?text=Blogify+Application+Showcase)
 
 **Live Demo URL:**  (Coming Soon!)
 **Loom Walkthrough:** (Coming Soon!)
