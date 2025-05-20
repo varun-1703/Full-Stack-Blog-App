@@ -1,9 +1,9 @@
-# 🚀 Full-Stack MyBlogApp - Create, Share, Inspire! 📝
+# 🚀 MyBlogApp - Create, Share, Inspire! 📝
 
 ![MyBlogApp Showcase](https://via.placeholder.com/800x300.png?text=Blogify+Application+Showcase)
 
 **Live Demo URL:**  https://blog-app-frontend-482h.onrender.com
-**Loom Walkthrough:** (Coming Soon!)
+**Loom Walkthrough:** https://www.loom.com/share/d454e054019e423aa65ee3454f68dbb5?sid=61b58ef4-5094-43a1-afb8-1e4e91949ad4
 
 ---
 
